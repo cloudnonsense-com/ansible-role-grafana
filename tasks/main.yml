@@ -11,6 +11,10 @@
     src: compose.yml.j2
     dest: "{{ app_dir }}/compose.yml"
 
+- name: grafana | create network
+  docker_network:
+    name: "{{ grafana_network }}"
+
 - name: grafana | deploy docker-compose
   community.docker.docker_compose_v2:
     project_src: "{{ app_dir }}"
