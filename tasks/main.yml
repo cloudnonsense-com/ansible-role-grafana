@@ -1,0 +1,18 @@
+---
+# tasks file for ansible-role-grafana
+- name: grafana | create dirs
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: grafana | render templates
+  ansible.builtin.template:
+    src: compose.yml.j2
+    dest: "{{ app_dir }}/compose.yml"
+
+- name: grafana | deploy docker-compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ app_dir }}"
+    state: present
+...

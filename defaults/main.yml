@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-role-grafana
+# (user-configurable)
+grafana_container_name: "grafana"
+grafana_image: "grafana/grafana-oss:11.5.1"
+grafana_network: "grafana"
+grafana_ports: "37000:3000"
+grafana_host: "grafana.ed1.lan"
+...

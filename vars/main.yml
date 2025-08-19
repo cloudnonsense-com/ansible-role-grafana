@@ -1,0 +1,7 @@
+---
+# vars file for ansible-role-grafana
+# use for hard values (not user-configurable)
+compose_dir: /opt/compose
+app_name: grafana
+app_dir: "{{ compose_dir }}/{{ app_name }}"
+...

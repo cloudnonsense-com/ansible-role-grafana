@@ -1,0 +1,37 @@
+services:
+  {{ grafana_container_name }}:
+    image: {{ grafana_image }}
+    user: root
+    container_name: {{ grafana_container_name }}
+    restart: unless-stopped
+    networks: 
+      - {{ grafana_network }}
+    logging:
+      driver: json-file
+      options:
+        max-file: 10
+        max-size: 2m
+    ports:
+      - {{ grafana_ports }}
+    volumes:
+      # /var/lib/grafana - runtime data, sqlite db and state/persistent data (use for backups)
+      - {{ app_dir }}/var/lib/grafana:/var/lib/grafana
+      # /etc/grafana/provisioning - use for provisioning stuff (dashboards, datasources ...)
+      - {{ app_dir }}/etc/grafana/provisioning:/etc/grafana/provisioning
+      # /usr/share/grafana/conf/provisioning - examples
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana-http.rule=Host(`{{ grafana_host }}`)
+      - traefik.http.routers.grafana-http.entrypoints=http
+      - traefik.http.middlewares.grafana-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.grafana-http.middlewares=grafana-https-redirect
+      - traefik.http.routers.grafana-https.rule=Host(`{{ grafana_host }}`)
+      - traefik.http.routers.grafana-https.entrypoints=https
+      - traefik.http.routers.grafana-https.tls=true
+    # environment:
+    #   - GF_LOG_LEVEL=debug
+    #   - GF_PLUGINS_PREINSTALL="grafana-clock-panel, grafana-simple-json-datasource"
+
+networks:
+  {{ grafana_network }}:
+    external: true
